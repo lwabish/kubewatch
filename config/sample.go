@@ -54,6 +54,10 @@ handler:
     requireTLS: false
     # SMTP hello field (optional)
     hello: ""
+  permission:
+    scname: ""
+    chmod: ""
+    chown: ""
 # Resources to watch.
 resource:
   deployment: false

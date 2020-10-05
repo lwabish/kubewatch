@@ -26,6 +26,7 @@ import (
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/hipchat"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/mattermost"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/msteam"
+	"github.com/bitnami-labs/kubewatch/pkg/handlers/permission"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/slack"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/smtp"
 	"github.com/bitnami-labs/kubewatch/pkg/handlers/webhook"
@@ -57,6 +58,9 @@ func ParseEventHandler(conf *config.Config) handlers.Handler {
 		eventHandler = new(msteam.MSTeams)
 	case len(conf.Handler.SMTP.Smarthost) > 0 || len(conf.Handler.SMTP.To) > 0:
 		eventHandler = new(smtp.SMTP)
+	//TODO 完善判断条件
+	case len(conf.Handler.Permission.ScName) >0 :
+		eventHandler = new(permission.Permission)
 	default:
 		eventHandler = new(handlers.Default)
 	}

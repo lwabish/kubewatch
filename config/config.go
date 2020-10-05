@@ -44,6 +44,7 @@ type Handler struct {
 	Webhook    Webhook    `json:"webhook"`
 	MSTeams    MSTeams    `json:"msteams"`
 	SMTP       SMTP       `json:"smtp"`
+	Permission Permission `json:"permission"`
 }
 
 // Resource contains resource configuration
@@ -79,6 +80,14 @@ type Config struct {
 	// this config is ignored when watching namespaces
 	Namespace string `json:"namespace,omitempty"`
 }
+
+
+type Permission struct {
+	ScName string `json:"scname"`
+	Chmod string `json:"chmod"`
+	Chown string `json:"chown"`
+}
+
 
 // Slack contains slack configuration
 type Slack struct {
