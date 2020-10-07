@@ -58,7 +58,6 @@ func ParseEventHandler(conf *config.Config) handlers.Handler {
 		eventHandler = new(msteam.MSTeams)
 	case len(conf.Handler.SMTP.Smarthost) > 0 || len(conf.Handler.SMTP.To) > 0:
 		eventHandler = new(smtp.SMTP)
-	//TODO 完善判断条件
 	case len(conf.Handler.Permission.ScName) >0 :
 		eventHandler = new(permission.Permission)
 	default:
