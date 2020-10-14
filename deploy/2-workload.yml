@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubewatch
+  namespace: kubewatch
+spec:
+  selector:
+    matchLabels:
+      app: kubewatch
+  template:
+    metadata:
+      labels:
+        app: kubewatch
+    spec:
+      containers:
+        - name: kubewatch
+          image: lwabish/kubewatch
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /root/
+              name: config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 300m
+              memory: 300Mi
+      volumes:
+        - name: config
+          configMap:
+            name: kubewatch
+      serviceAccount: kubewatch

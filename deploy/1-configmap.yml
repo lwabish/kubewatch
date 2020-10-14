@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubewatch
+  namespace: kubewatch
+data:
+  .kubewatch.yaml: |
+    handler:
+      slack:
+        token: ""
+        channel: ""
+        title: ""
+      hipchat:
+        token: ""
+        room: ""
+        url: ""
+      mattermost:
+        channel: ""
+        url: ""
+        username: ""
+      flock:
+        url: ""
+      webhook:
+        url: ""
+      msteams:
+        webhookurl: ""
+      smtp:
+        requireTLS: false
+      permission:
+        scname: rook-ceph-fs
+        chmod: "750"
+        chown: "999"
+        debug: "true"
+    resource:
+      deployment: false
+      replicationcontroller: false
+      replicaset: false
+      daemonset: false
+      services: false
+      pod: false
+      job: false
+      node: false
+      clusterrole: false
+      serviceaccount: false
+      persistentvolume: true
+      namespace: false
+      secret: false
+      configmap: false
+      ingress: false
+    namespace: ""
