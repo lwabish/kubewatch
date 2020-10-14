@@ -4,6 +4,7 @@ MAINTAINER "Cuong Manh Le <cuong.manhle.vn@gmail.com>"
 RUN apt-get update && \
     apt-get install -y --no-install-recommends build-essential && \
     apt-get clean && \
+    go env -w GOPROXY=https://goproxy.io,direct && \
     mkdir -p "$GOPATH/src/github.com/bitnami-labs/kubewatch"
 
 ADD . "$GOPATH/src/github.com/bitnami-labs/kubewatch"
