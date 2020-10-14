@@ -58,6 +58,7 @@ handler:
     scname: ""
     chmod: ""
     chown: ""
+    debug: ""
 # Resources to watch.
 resource:
   deployment: false

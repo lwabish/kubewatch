@@ -81,13 +81,12 @@ type Config struct {
 	Namespace string `json:"namespace,omitempty"`
 }
 
-
 type Permission struct {
 	ScName string `json:"scname"`
-	Chmod string `json:"chmod"`
-	Chown string `json:"chown"`
+	Chmod  string `json:"chmod"`
+	Chown  string `json:"chown"`
+	Debug  string `json:"debug"`
 }
-
 
 // Slack contains slack configuration
 type Slack struct {
