@@ -12,18 +12,21 @@ import (
 	"k8s.io/client-go/rest"
 	"log"
 	"os"
+	"strconv"
 )
 
 type Permission struct {
 	scName string
 	chmod  string
 	chown  string
+	debug  bool
 }
 
 func (p *Permission) Init(c *config.Config) error {
 	p.scName = os.Getenv("scName")
 	p.chown = os.Getenv("chown")
 	p.chmod = os.Getenv("chmod")
+	d := os.Getenv("debug")
 
 	if p.scName == "" {
 		p.scName = c.Handler.Permission.ScName
@@ -39,6 +42,14 @@ func (p *Permission) Init(c *config.Config) error {
 		if p.chown == "" {
 			p.chown = "root"
 		}
+	}
+	if d == "" {
+		d = c.Handler.Permission.Debug
+	}
+	var err error
+	p.debug, err = strconv.ParseBool(d)
+	if err != nil {
+		log.Fatalf("parse debug arg err: %s", err)
 	}
 
 	return nil
@@ -66,9 +77,11 @@ func (p *Permission) Handle(e event.Event) {
 	}
 	//log.Println(pv.Spec.ClaimRef.Name, pv.Spec.ClaimRef.Namespace, pv.Status.Phase)
 
+	newJobName := fmt.Sprintf("pfixer-%s-%s", pv.Spec.ClaimRef.Name, pv.Spec.ClaimRef.Namespace)
+
 	newJob := &batchV1.Job{
 		ObjectMeta: metaV1.ObjectMeta{
-			Name:      fmt.Sprintf("pfixer-%s-%s", pv.Spec.ClaimRef.Name, pv.Spec.ClaimRef.Namespace),
+			Name:      newJobName,
 			Namespace: pv.Spec.ClaimRef.Namespace,
 			Labels:    map[string]string{"jobgroup": "permission"},
 		},
@@ -114,5 +127,16 @@ func (p *Permission) Handle(e event.Event) {
 	_, err = clientSet.BatchV1().Jobs(pv.Spec.ClaimRef.Namespace).Create(newJob)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if !p.debug {
+		propagationPolicy := metaV1.DeletePropagationBackground
+		err = clientSet.BatchV1().Jobs(pv.Spec.ClaimRef.Namespace).Delete(newJobName, &metaV1.DeleteOptions{PropagationPolicy: &propagationPolicy})
+
+		if err != nil {
+			log.Println("clean job failed:", err)
+		}
+	} else {
+		log.Println("debug mode on, leave job without cleaning")
 	}
 }
