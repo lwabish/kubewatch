@@ -32,3 +32,8 @@ clean-images: stop
 
 clean:
 	"$(GOCMD)" clean -i
+
+update_minikube: docker-image
+	docker tag kubewatch lwabish/kubewatch
+	docker push lwabish/kubewatch
+	kubectl rollout restart deployment kubewatch -n kubewatch
